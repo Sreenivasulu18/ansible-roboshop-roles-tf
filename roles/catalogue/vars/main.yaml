@@ -1,1 +1,1 @@
-MONGODB_HOST: mongodb.daws96s.fun
+MONGODB_HOST: mongodb-{{ env }}.daws96s.fun  # mongodb-dev.daws96s.fun
