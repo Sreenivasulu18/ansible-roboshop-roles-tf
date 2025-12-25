@@ -14,8 +14,8 @@
   - openssl-libs
   - openssh
   - openssh-server
-  - openssh-
-  
+  - openssh-clients
+
 - name: nodejs setup
   #ansible.builtin.import_role:
   ansible.builtin.include_role:
