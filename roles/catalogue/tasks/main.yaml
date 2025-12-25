@@ -5,6 +5,17 @@
   tags:
   - deployment
 
+- name: upgrade openssl packages
+  ansible.builtin.dnf:
+    name: "{{ item }}"
+    state: latest
+  loop:
+  - openssl
+  - openssl-libs
+  - openssh
+  - openssh-server
+  - openssh-
+  
 - name: nodejs setup
   #ansible.builtin.import_role:
   ansible.builtin.include_role:
