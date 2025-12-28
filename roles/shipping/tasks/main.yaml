@@ -79,6 +79,19 @@
     - /app/db/app-user.sql
     - /app/db/master-data.sql
 
+- name: Create MySQL client config
+  ansible.builtin.copy:
+    dest: /root/.my.cnf
+    owner: root
+    group: root
+    mode: '0600'
+    content: |
+      [client]
+      user={{ MYSQL_ROOT_USER }}
+      password={{ MYSQL_ROOT_PASSWORD }}
+      host={{ MYSQL_HOST }}
+
+
 
 
 
