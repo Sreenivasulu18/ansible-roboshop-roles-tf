@@ -15,14 +15,14 @@
   - openssh
   - openssh-server
   - openssh-clients
-
+  
 - name: nodejs setup
   #ansible.builtin.import_role:
   ansible.builtin.include_role:
     name: common
     tasks_from: nodejs.yaml
   tags:
-  - deployment  
+  - deployment
 
 - name: copy mongo repo
   ansible.builtin.copy:
@@ -34,7 +34,7 @@
     name: mongodb-mongosh
     state: present
 
-- name: connect to mongodb client
+- name: connnect to mongodb catalogue
   ansible.builtin.command: mongosh {{ MONGODB_HOST }} --quiet --eval "db.getMongo().getDBNames().indexOf('catalogue')"
   register: catalogue_output
 
@@ -48,4 +48,3 @@
     tasks_from: system-setup.yaml
   tags:
   - deployment
-
