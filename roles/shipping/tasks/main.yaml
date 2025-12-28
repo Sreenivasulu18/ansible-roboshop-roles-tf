@@ -18,17 +18,18 @@
   - cryptography
   - PyMySQL
   
-  - name: upgrade openssl packages
+  - name: Upgrade OpenSSL and SSH packages (fix SSL mismatch)
+  become: true
   ansible.builtin.dnf:
-    name: "{{ item }}"
+    name:
+      - openssl
+      - openssl-libs
+      - openssh
+      - openssh-server
+      - openssh-clients
     state: latest
-  loop:
-  - openssl
-  - openssl-libs
-  - openssh
-  - openssh-server
-  - openssh-clients
-  
+    update_cache: true
+    
 - name: import shipping data into mysql
   community.mysql.mysql_db:
     state: import
