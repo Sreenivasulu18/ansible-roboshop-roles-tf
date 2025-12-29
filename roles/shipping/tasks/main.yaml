@@ -1,7 +1,7 @@
-# - name: app setup
-#   ansible.builtin.import_role:
-#     name: common
-#     tasks_from: app-setup.yaml
+- name: app setup
+  ansible.builtin.import_role:
+    name: common
+    tasks_from: app-setup.yaml
 
 # - name: Upgrade OpenSSL and SSH packages (fix SSL mismatch)
 #   ansible.builtin.dnf:
@@ -12,60 +12,32 @@
 #       - openssh-clients
 #     state: latest
 
-# - name: app setup
-#   ansible.builtin.import_role:
-#     name: common
-#     tasks_from: java.yaml
 
-# - name: install mysql python libraries
-#   ansible.builtin.pip:
-#     executable: pip3.9
-#     name: "{{ item }}"
-#   loop:
-#   - cryptography
-#   - PyMySQL
-  
-  
-
-# - name: import shipping data into mysql
-#   community.mysql.mysql_db:
-#     state: import
-#     name: all
-#     login_host: "{{ MYSQL_HOST }}"
-#     login_user: "{{ MYSQL_ROOT_USER }}"
-#     login_password: "{{ MYSQL_ROOT_PASSWORD }}"
-#     target: "{{ item }}"
-#   loop:
-#   - /app/db/schema.sql
-#   - /app/db/app-user.sql 
-#   - /app/db/master-data.sql
-
-# - name: system setup
-#   ansible.builtin.import_role:
-#     name: common
-#     tasks_from: system-setup.yaml
-
-    
-- import_role:
-    name: common
-    tasks_from: app-setup.yaml
-- name: Upgrade OpenSSL and SSH packages
+- name: upgrade openssl packages
   ansible.builtin.dnf:
-    name:
-      - openssl
-      - openssl-libs
-      - openssh
-      - openssh-clients
+    name: "{{ item }}"
     state: latest
-- import_role:
+  loop:
+  - openssl
+  - openssl-libs
+  - openssh
+  - openssh-server
+  - openssh-clients
+  
+  
+- name: app setup
+  ansible.builtin.import_role:
     name: common
     tasks_from: java.yaml
+
 - name: install mysql python libraries
   ansible.builtin.pip:
     executable: pip3.9
-    name:
-      - cryptography
-      - PyMySQL
+    name: "{{ item }}"
+  loop:
+  - cryptography
+  - PyMySQL
+  
 - name: import shipping data into mysql
   community.mysql.mysql_db:
     state: import
@@ -75,21 +47,62 @@
     login_password: "{{ MYSQL_ROOT_PASSWORD }}"
     target: "{{ item }}"
   loop:
-    - /app/db/schema.sql
-    - /app/db/app-user.sql
-    - /app/db/master-data.sql
+  - /app/db/schema.sql
+  - /app/db/app-user.sql 
+  - /app/db/master-data.sql
 
-- name: Create MySQL client config
-  ansible.builtin.copy:
-    dest: /root/.ansible.cfg
-    owner: root
-    group: root
-    mode: '0600'
-    content: |
-      [client]
-      user={{ MYSQL_ROOT_USER }}
-      password={{ MYSQL_ROOT_PASSWORD }}
-      host={{ MYSQL_HOST }}
+- name: system setup
+  ansible.builtin.import_role:
+    name: common
+    tasks_from: system-setup.yaml
+
+    
+
+
+# - import_role:
+#     name: common
+#     tasks_from: app-setup.yaml
+# - name: Upgrade OpenSSL and SSH packages
+#   ansible.builtin.dnf:
+#     name:
+#       - openssl
+#       - openssl-libs
+#       - openssh
+#       - openssh-clients
+#     state: latest
+# - import_role:
+#     name: common
+#     tasks_from: java.yaml
+# - name: install mysql python libraries
+#   ansible.builtin.pip:
+#     executable: pip3.9
+#     name:
+#       - cryptography
+#       - PyMySQL
+# - name: import shipping data into mysql
+#   community.mysql.mysql_db:
+#     state: import
+#     name: all
+#     login_host: "{{ MYSQL_HOST }}"
+#     login_user: "{{ MYSQL_ROOT_USER }}"
+#     login_password: "{{ MYSQL_ROOT_PASSWORD }}"
+#     target: "{{ item }}"
+#   loop:
+#     - /app/db/schema.sql
+#     - /app/db/app-user.sql
+#     - /app/db/master-data.sql
+
+# - name: Create MySQL client config
+#   ansible.builtin.copy:
+#     dest: /root/.my.cnf
+#     owner: root
+#     group: root
+#     mode: '0600'
+#     content: |
+#       [client]
+#       user={{ MYSQL_ROOT_USER }}
+#       password={{ MYSQL_ROOT_PASSWORD }}
+#       host={{ MYSQL_HOST }}
 
 
 
